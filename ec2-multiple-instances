@@ -1,0 +1,19 @@
+Create multiple ec2- instances
+===================================
+provider "aws" {
+  profile = "default"
+  region  = "ap-south-1"
+}
+
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+
+  for_each = toset(["server2", "server3", "server4"])
+
+  name               = "instance-${each.key}"
+  instance_type      = "t2.micro"
+  key_name          = "aws"
+  monitoring        = true
+  subnet_id         = "subnet-0da1f9ebaa2d9b8e8"
+}
+
