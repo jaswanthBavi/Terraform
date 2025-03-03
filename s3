@@ -1,0 +1,35 @@
+S3-Bucket
+============
+ provider "aws" {
+  profile = "default"
+  region  = "ap-south-1"
+}
+
+# Generate a random 4-byte ID for unique bucket names
+resource "random_id" "bucket_id" {
+  byte_length = 4
+}
+
+module "s3_bucket" {
+  source = "terraform-aws-modules/s3-bucket/aws"
+
+  bucket = "my-s3-bucket-${random_id.bucket_id.hex}" # Fix: Now `random_id` is declared properly
+
+  control_object_ownership = true
+  object_ownership         = "BucketOwnerEnforced"
+
+  versioning = {
+    enabled = true
+  }
+
+  force_destroy = true # Allows Terraform to delete the bucket if needed
+
+  server_side_encryption_configuration = {
+    rule = {
+      apply_server_side_encryption_by_default = {
+        sse_algorithm = "AES256"
+      }
+    }
+  }
+}
+
