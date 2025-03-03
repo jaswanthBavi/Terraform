@@ -1,0 +1,50 @@
+provider "aws" {
+  region  = "ap-south-1"
+  profile = "default"
+}
+module "sns_topic" {
+  source  = "terraform-aws-modules/sns/aws"
+  name = "my-topic"
+  topic_policy_statements = {
+    pub = {
+      actions = ["sns:Publish"]
+      principals = [{
+        type        = "AWS"
+        identifiers = ["arn:aws:iam::911167896774:role/sns-role4321"]
+      }]
+    }
+
+    sub = {
+      actions = [
+        "sns:Subscribe",
+        "sns:Receive"
+      ]
+
+      principals = [{
+        type        = "AWS"
+        identifiers = ["arn:aws:iam::911167896774:role/sns-role4321"]
+      }]
+
+      conditions = [{
+        test     = "StringLike"
+        variable = "sns:Endpoint"
+        values   = ["arn:aws:sqs:ap-south-1:11111111111:subscriber"]
+      }]
+    }
+  }
+
+  subscriptions = {
+    email1 = {
+      protocol = "email"
+      endpoint = "jaswanthchowdari@gmail.com"
+    }
+    sms = {
+      protocol = "sms"
+      endpoint = "+917036846483"
+
+
+    }
+  }
+}
+
+
