@@ -1,0 +1,18 @@
+Create ec2-instances
+======================
+ provider "aws" {
+  profile = "default"
+  region  = "ap-south-1"
+}
+
+module "ec2_instance" {
+  source  = "terraform-aws-modules/ec2-instance/aws"
+
+  name                = "server-1"
+  instance_type       = "t2.micro"
+  key_name           = "aws"
+  ami                = "ami-02ddb77f8f93ca4ca"
+  monitoring         = true
+}
+
+
