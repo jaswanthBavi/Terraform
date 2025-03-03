@@ -1,0 +1,11 @@
+provider "aws" {
+  region  = "ap-south-1"
+  profile = "default"
+}
+
+module "sns_topic" {
+  source = "terraform-aws-modules/sns/aws"
+
+  name = "simple"
+}
+
